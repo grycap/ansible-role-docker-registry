@@ -1,0 +1,8 @@
+---
+docker_type_of_node: "front"
+country: "ES"
+region: "Valencia"
+city: "Valencia"
+organization: "UPV"
+ounit: "I3M"
+front_hostname: ""
