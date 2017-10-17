@@ -92,7 +92,7 @@
           REGISTRY_HTTP_TLS_KEY: "/certs/{{ansible_hostname}}.key"
       restart_policy: always
 
-when: "{{ docker_installation }}" == "registry" or "{{ docker_installation }}" == "both"
+when: "{{ docker_installation }}" == "registry" || "{{ docker_installation }}" == "both"
 
 ###############################################################################################
 ## MIRROR
@@ -126,4 +126,4 @@ when: "{{ docker_installation }}" == "registry" or "{{ docker_installation }}" =
           MIRROR_SOURCE_INDEX: "https://index.docker.io"          
       restart_policy: always
      
-when: "{{ docker_installation }}" == "mirror" or "{{ docker_installation }}" == "both"
+when: "{{ docker_installation }}" == "mirror" || "{{ docker_installation }}" == "both"
