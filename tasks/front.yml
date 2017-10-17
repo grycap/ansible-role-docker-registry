@@ -126,4 +126,4 @@
           MIRROR_SOURCE_INDEX: "https://index.docker.io"          
       restart_policy: always
      
-when: (docker_installation == "mirror") or (docker_installation == "both")
+  when: (docker_installation == "mirror") or (docker_installation == "both")
