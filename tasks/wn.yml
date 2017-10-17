@@ -21,4 +21,4 @@
       - "{{front_hostname}}.key"
       - ca.crt
 
-when: (docker_installation == "registry") or (docker_installation == "both")
+  when: (docker_installation == "registry") or (docker_installation == "both")
