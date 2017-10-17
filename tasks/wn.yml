@@ -22,15 +22,3 @@
       - ca.crt
 
 when: "{{ docker_installation }}" == "registry" or "{{ docker_installation }}" == "both"
-
-
-###############################################################################################
-## MIRROR
-###############################################################################################
-- block:
-  - name: Create directory for registry keys
-    file:
-      path: "/etc/docker/certs.d/{{front_hostname}}:5000/"
-      state: directory
-      
-when: "{{ docker_installation }}" == "mirror" or "{{ docker_installation }}" == "both"
