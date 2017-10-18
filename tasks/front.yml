@@ -115,8 +115,8 @@
       name: mirror
       image: registry
       volumes:
-        - /opt/docker_registry/mirror:/var/lib/registry
-        - /opt/docker_registry/mirror/config.yml:/etc/docker/registry/config.yml
+        - "/opt/docker_registry/mirror/:/var/lib/registry/"
+        - "/opt/docker_registry/mirror/config.yml:/etc/docker/registry/config.yml"
       ports:
        - "5555:5000"
       env:
