@@ -99,11 +99,6 @@
 ###############################################################################################
 
 - block:
-  - name: Create docker mirror config.yml
-    copy:
-      dest: "/opt/docker_registry/config.yml"
-      src: "files/config.yml"
-
   - name: Create mirror directory
     file:
       path: "/opt/docker_registry/mirror"
@@ -113,10 +108,9 @@
   - name: Run docker mirror
     docker_container:
       name: mirror
-      image: registry
+      image: eubrabigsea/registry:2
       volumes:
         - "/opt/docker_registry/mirror/:/var/lib/registry/"
-        - "/opt/docker_registry/mirror/config.yml:/etc/docker/registry/config.yml"
       ports:
        - "5555:5000"
       env:
