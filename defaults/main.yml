@@ -1,7 +1,7 @@
 ---
 docker_type_of_node: "front"
 # docker_installation can be 'registry', 'mirror' or 'both'
-docker_installation: "registry"
+docker_installation: "both"
 country: "ES"
 region: "Valencia"
 city: "Valencia"
