@@ -8,17 +8,31 @@
       path: "/etc/docker/certs.d/{{front_hostname}}:5000/"
       state: directory
 
-  - name: Copy certificates from frontend
-    copy: src="/opt/docker_registry/certs/{{item}}" dest="/opt/docker_registry/certs/"
-    with_items:
-      - "{{front_hostname}}.cert"
-      - "{{front_hostname}}.key"
+  - name: Check and delete previous certificates
+    file: 
+      path: "{{ item }}"
+      state: absent
+    with_items: 
+      - "/opt/docker_registry/certs/{{front_hostname}}.cert"
+      - "/opt/docker_registry/certs/{{front_hostname}}.key"
+      - "/etc/docker/certs.d/{{front_hostname}}:5000/{{front_hostname}}.cert"
+      - "/etc/docker/certs.d/{{front_hostname}}:5000/{{front_hostname}}.key"
+      - "/etc/docker/certs.d/{{front_hostname}}:5000/ca.crt"
 
-  - name: Copy Certificates from frontend-2
-    copy: src="/opt/docker_registry/certs/{{item}}" dest="/etc/docker/certs.d/{{front_hostname}}:5000/"
+  - name: Copy certificates from frontend
+    copy: 
+      src: "{{ item.src }}" 
+      dest: "{{ item.dest }}"
     with_items:
-      - "{{front_hostname}}.cert"
-      - "{{front_hostname}}.key"
-      - ca.crt
+      - src: "/opt/docker_registry/certs/{{front_hostname}}.cert"
+        dest: "/opt/docker_registry/certs/{{front_hostname}}.cert"
+      - src: "/opt/docker_registry/certs/{{front_hostname}}.key"
+        dest: "/opt/docker_registry/certs/{{front_hostname}}.key"
+      - src: "/opt/docker_registry/certs/{{front_hostname}}.cert"
+        dest: "/etc/docker/certs.d/{{front_hostname}}:5000/{{front_hostname}}.cert"
+      - src: "/opt/docker_registry/certs/{{front_hostname}}.key"
+        dest: "/etc/docker/certs.d/{{front_hostname}}:5000/{{front_hostname}}.key"
+      - src: /opt/docker_registry/certs/ca.crt
+        dest: "/etc/docker/certs.d/{{front_hostname}}:5000/ca.crt"
 
   when: (docker_installation == "registry") or (docker_installation == "both")
