@@ -10,14 +10,14 @@
 
   - name: Check and delete previous certificates
     file: 
-      path: "{{ item.src }}"
+      path: "{{ item }}"
       state: absent
-      with_items: 
-        - src: "/opt/docker_registry/certs/{{front_hostname}}.cert"
-        - src: "/opt/docker_registry/certs/{{front_hostname}}.key"
-        - src: "/etc/docker/certs.d/{{front_hostname}}:5000/{{front_hostname}}.cert"
-        - src: "/etc/docker/certs.d/{{front_hostname}}:5000/{{front_hostname}}.key"
-        - src: "/etc/docker/certs.d/{{front_hostname}}:5000/ca.crt"
+    with_items: 
+      - "/opt/docker_registry/certs/{{front_hostname}}.cert"
+      - "/opt/docker_registry/certs/{{front_hostname}}.key"
+      - "/etc/docker/certs.d/{{front_hostname}}:5000/{{front_hostname}}.cert"
+      - "/etc/docker/certs.d/{{front_hostname}}:5000/{{front_hostname}}.key"
+      - "/etc/docker/certs.d/{{front_hostname}}:5000/ca.crt"
 
   - name: Copy certificates from frontend
     copy: 
