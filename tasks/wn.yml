@@ -20,19 +20,21 @@
       - "/etc/docker/certs.d/{{front_hostname}}:5000/ca.crt"
 
   - name: Copy certificates from frontend
-    copy: 
+    fetch:
       src: "{{ item.src }}" 
       dest: "{{ item.dest }}"
+      flat: yes
     with_items:
       - src: "/opt/docker_registry/certs/{{front_hostname}}.cert"
         dest: "/opt/docker_registry/certs/{{front_hostname}}.cert"
       - src: "/opt/docker_registry/certs/{{front_hostname}}.key"
         dest: "/opt/docker_registry/certs/{{front_hostname}}.key"
-      - src: "/opt/docker_registry/certs/{{front_hostname}}.cert"
-        dest: "/etc/docker/certs.d/{{front_hostname}}:5000/{{front_hostname}}.cert"
-      - src: "/opt/docker_registry/certs/{{front_hostname}}.key"
-        dest: "/etc/docker/certs.d/{{front_hostname}}:5000/{{front_hostname}}.key"
-      - src: /opt/docker_registry/certs/ca.crt
-        dest: "/etc/docker/certs.d/{{front_hostname}}:5000/ca.crt"
+      - src: "/etc/docker/certs.d/{{front_hostname}}:5000/{{front_hostname}}.cert"
+        dest: "/opt/docker_registry/certs/{{front_hostname}}.cert"
+      - src: "/etc/docker/certs.d/{{front_hostname}}:5000/{{front_hostname}}.key"
+        dest: "/opt/docker_registry/certs/{{front_hostname}}.key"
+      - src: "/etc/docker/certs.d/{{front_hostname}}:5000/ca.crt"
+        dest: /opt/docker_registry/certs/ca.crt
+    delegate_to: '{{ front_hostname }}'
 
   when: (docker_installation == "registry") or (docker_installation == "both")
