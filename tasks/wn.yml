@@ -7,6 +7,11 @@
     file:
       path: "/etc/docker/certs.d/{{front_hostname}}:5000/"
       state: directory
+  
+  - name: Modify permissions in certs directory for registry keys
+    file:
+      path: "/opt/docker_registry/certs/"
+      state: directory
       mode: 0757
 
   - name: Check and delete previous certificates
