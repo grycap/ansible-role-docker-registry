@@ -5,7 +5,7 @@
 - block:
   - name: Create directory for registry keys
     file:
-      path: "/etc/docker/certs.d/{{ansible_hostname}}:5000/"
+      path: "/etc/docker/certs.d/{{front_hostname}}:5000/"
       state: directory
 
   # Create registry certificates
@@ -15,7 +15,7 @@
       chdir: "/opt/docker_registry/certs"
 
   - name: Create the CA certificate
-    command: openssl req -new -x509 -days 365 -key ca.key -out ca.crt  -subj "/C={{country}}/ST={{region}}/L={{city}}/O={{organization}}/OU={{ounit}}/CN={{ansible_hostname}}"
+    command: openssl req -new -x509 -days 365 -key ca.key -out ca.crt  -subj "/C={{country}}/ST={{region}}/L={{city}}/O={{organization}}/OU={{ounit}}/CN={{front_hostname}}"
     args:
       chdir: "/opt/docker_registry/certs"
 
@@ -25,31 +25,31 @@
       chdir: "/opt/docker_registry/certs"
 
   - name:  Create a certificate request for the private key
-    command: openssl req -nodes -newkey rsa:2048 -keyout {{ansible_hostname}}.key -out {{ansible_hostname}}.csr -subj "/C={{country}}/ST={{region}}/L={{city}}/O={{organization}}/OU={{ounit}}/CN={{ansible_hostname}}"
+    command: openssl req -nodes -newkey rsa:2048 -keyout {{front_hostname}}.key -out {{front_hostname}}.csr -subj "/C={{country}}/ST={{region}}/L={{city}}/O={{organization}}/OU={{ounit}}/CN={{front_hostname}}"
     args:
       chdir: "/opt/docker_registry/certs"
 
   - name:  Signing the certificates
-    command: openssl x509 -req -days 365 -in {{ansible_hostname}}.csr -CA ca.crt -CAkey ca.key -set_serial 01 -out {{ansible_hostname}}.cert
+    command: openssl x509 -req -days 365 -in {{front_hostname}}.csr -CA ca.crt -CAkey ca.key -set_serial 01 -out {{front_hostname}}.cert
     args:
       chdir: "/opt/docker_registry/certs"
 
-  - name: Copy {{ansible_hostname}}.cert file
+  - name: Copy {{front_hostname}}.cert file
     copy:
       remote_src: True
-      dest: "/etc/docker/certs.d/{{ansible_hostname}}:5000/{{ansible_hostname}}.cert"
-      src: "/opt/docker_registry/certs/{{ansible_hostname}}.cert"
+      dest: "/etc/docker/certs.d/{{front_hostname}}:5000/{{front_hostname}}.cert"
+      src: "/opt/docker_registry/certs/{{front_hostname}}.cert"
 
-  - name: Copy {{ansible_hostname}}.key file
+  - name: Copy {{front_hostname}}.key file
     copy:
       remote_src: True
-      dest: "/etc/docker/certs.d/{{ansible_hostname}}:5000/{{ansible_hostname}}.key"
-      src: "/opt/docker_registry/certs/{{ansible_hostname}}.key"
+      dest: "/etc/docker/certs.d/{{front_hostname}}:5000/{{front_hostname}}.key"
+      src: "/opt/docker_registry/certs/{{front_hostname}}.key"
 
   - name: Copy ca.crt file
     copy:
       remote_src: True
-      dest: "/etc/docker/certs.d/{{ansible_hostname}}:5000/ca.crt"
+      dest: "/etc/docker/certs.d/{{front_hostname}}:5000/ca.crt"
       src: "/opt/docker_registry/certs/ca.crt"
 
   - name: Delete unneeded certificates
@@ -57,7 +57,7 @@
       path: "/opt/docker_registry/certs/{{item}}"
       state: absent
     with_items:
-      - "{{ansible_hostname}}.csr"
+      - "{{front_hostname}}.csr"
       - client.key
       - ca.key
 
@@ -71,8 +71,8 @@
       ports:
        - "5000:5000"
       env:
-          REGISTRY_HTTP_TLS_CERTIFICATE: "/certs/{{ansible_hostname}}.cert"
-          REGISTRY_HTTP_TLS_KEY: "/certs/{{ansible_hostname}}.key"
+          REGISTRY_HTTP_TLS_CERTIFICATE: "/certs/{{front_hostname}}.cert"
+          REGISTRY_HTTP_TLS_KEY: "/certs/{{front_hostname}}.key"
       restart_policy: always
 
   # Needed due to reconfiguration errors
@@ -88,8 +88,8 @@
       ports:
        - "5000:5000"
       env:
-          REGISTRY_HTTP_TLS_CERTIFICATE: "/certs/{{ansible_hostname}}.cert"
-          REGISTRY_HTTP_TLS_KEY: "/certs/{{ansible_hostname}}.key"
+          REGISTRY_HTTP_TLS_CERTIFICATE: "/certs/{{front_hostname}}.cert"
+          REGISTRY_HTTP_TLS_KEY: "/certs/{{front_hostname}}.key"
       restart_policy: always
 
   when: (docker_installation == "registry") or (docker_installation == "both")
