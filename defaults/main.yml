@@ -8,10 +8,10 @@ city: "Valencia"
 organization: "UPV"
 ounit: "I3M"
 front_hostname: ""
-docker_registry_certificates: "generate"
-# docker_registry_certificates can be 'generate' of 'ssh'
+# docker_registry_certificates can be 'front' of 'otherwise'
+docker_registry_certificates: "front"
 
-# shh vars
+# otherwise vars
 path_ca_crt: "" # absolute path
 path_certificate: "" # absolute path
 path_key: "" # absolute path

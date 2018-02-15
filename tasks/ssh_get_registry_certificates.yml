@@ -12,3 +12,6 @@
     - "{{ path_certificate }}"
     - "{{ path_key }}"
 
+- name: "Copy certificates from /opt/docker_registry/certs/ to /etc/docker/certs.d/{{front_hostname}}:5000/"
+  command: "cp -r /opt/docker_registry/certs/. /etc/docker/certs.d/{{front_hostname}}:5000/"
+  
