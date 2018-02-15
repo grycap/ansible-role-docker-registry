@@ -1,0 +1,26 @@
+--- 
+# Create registry certificates
+- name: Create the CA private key
+  command: openssl genrsa -out ca.key 4096
+  args:
+    chdir: "/opt/docker_registry/certs"
+
+- name: Create the CA certificate
+  command: openssl req -new -x509 -days 365 -key ca.key -out ca.crt  -subj "/C={{country}}/ST={{region}}/L={{city}}/O={{organization}}/OU={{ounit}}/CN={{front_hostname}}"
+  args:
+    chdir: "/opt/docker_registry/certs"
+
+- name:  Create a passwordless private key
+  command: openssl genrsa -out client.key 4096
+  args:
+    chdir: "/opt/docker_registry/certs"
+
+- name:  Create a certificate request for the private key
+  command: openssl req -nodes -newkey rsa:2048 -keyout {{front_hostname}}.key -out {{front_hostname}}.csr -subj "/C={{country}}/ST={{region}}/L={{city}}/O={{organization}}/OU={{ounit}}/CN={{front_hostname}}"
+  args:
+    chdir: "/opt/docker_registry/certs"
+
+- name:  Signing the certificates
+  command: openssl x509 -req -days 365 -in {{front_hostname}}.csr -CA ca.crt -CAkey ca.key -set_serial 01 -out {{front_hostname}}.cert
+  args:
+    chdir: "/opt/docker_registry/certs"

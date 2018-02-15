@@ -1,0 +1,14 @@
+--- 
+- name: Create file for private key:
+  copy:
+    dest: "/opt/docker_registry/{{ docker_registry_ssh_user }}.key"
+    mode: 0660
+    content: "{{ docker_registry_ssh_private_key }}"
+    
+- name: SCP
+  command: "scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /opt/docker_registry/{{ docker_registry_ssh_user }}.key {{ docker_registry_ssh_user }}@{{ docker_registry_ip }}:{{ item }} /opt/docker_registry/certs/"
+  with_items:
+    - "{{ path_ca_crt }}"
+    - "{{ path_certificate }}"
+    - "{{ path_key }}"
+
