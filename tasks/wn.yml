@@ -37,8 +37,8 @@
         dest: "/etc/docker/certs.d/{{front_hostname}}:5000/ca.crt"
     when: docker_registry_certificates == "front"
 
-    - name: Copy certificates from otherwise
-      include: ssh_get_registry_certificates.yml
-      when: docker_registry_certificates == "otherwise"
+  - name: Copy certificates from otherwise
+    include: ssh_get_registry_certificates.yml
+    when: docker_registry_certificates == "otherwise"
 
   when: (docker_installation == "registry") or (docker_installation == "both")
