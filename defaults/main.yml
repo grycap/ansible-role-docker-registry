@@ -8,3 +8,13 @@ city: "Valencia"
 organization: "UPV"
 ounit: "I3M"
 front_hostname: ""
+# docker_registry_certificates can be 'front' of 'otherwise'
+docker_registry_certificates: "front"
+
+# otherwise vars
+path_ca_crt: "" # absolute path
+path_certificate: "" # absolute path
+path_key: "" # absolute path
+docker_registry_ssh_user: ""
+docker_registry_ip: ""
+docker_registry_ssh_private_key: ""
