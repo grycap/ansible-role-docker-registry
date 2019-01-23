@@ -1,8 +1,0 @@
----
-- name: Install pip
-  yum: name=python-pip state=latest
-  when: ansible_distribution_major_version|int >= 7
-
-- name: Install dependencies for docker management
-  pip: name=docker
-  when: ansible_distribution_major_version|int >= 7
