@@ -60,6 +60,25 @@
       - client.key
       - ca.key
 
+  - set_fact:
+      docker_registry_env:
+          REGISTRY_HTTP_TLS_CERTIFICATE: "/certs/{{front_hostname}}.cert"
+          REGISTRY_HTTP_TLS_KEY: "/certs/{{front_hostname}}.key"
+    when: docker_registry_auth == ""
+
+  - set_fact:
+      docker_registry_env:
+          REGISTRY_HTTP_TLS_CERTIFICATE: "/certs/{{front_hostname}}.cert"
+          REGISTRY_HTTP_TLS_KEY: "/certs/{{front_hostname}}.key"
+          REGISTRY_AUTH: htpasswd
+          REGISTRY_AUTH_HTPASSWD_REALM: Registry Realm
+          REGISTRY_AUTH_HTPASSWD_PATH: /certs/htpasswd
+    when: docker_registry_auth != ""
+
+  - name: Create docker registry htpasswd file
+    copy: content="{{ docker_registry_auth }}" dest=/opt/docker_registry/certs/htpasswd
+    when: docker_registry_auth != ""
+
   - name: Run docker registry
     docker_container:
       name: registry
@@ -69,9 +88,7 @@
         - /opt/docker_registry/certs:/certs
       ports:
        - "5000:5000"
-      env:
-          REGISTRY_HTTP_TLS_CERTIFICATE: "/certs/{{front_hostname}}.cert"
-          REGISTRY_HTTP_TLS_KEY: "/certs/{{front_hostname}}.key"
+      env: "{{ docker_registry_env }}"
       restart_policy: always
 
   # Needed due to reconfiguration errors
@@ -86,9 +103,7 @@
         - /opt/docker_registry/certs:/certs
       ports:
        - "5000:5000"
-      env:
-          REGISTRY_HTTP_TLS_CERTIFICATE: "/certs/{{front_hostname}}.cert"
-          REGISTRY_HTTP_TLS_KEY: "/certs/{{front_hostname}}.key"
+      env: "{{ docker_registry_env }}"
       restart_policy: always
 
   when: (docker_installation == "registry") or (docker_installation == "both")

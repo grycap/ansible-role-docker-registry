@@ -18,3 +18,8 @@ path_key: "" # absolute path
 docker_registry_ssh_user: ""
 docker_registry_ip: ""
 docker_registry_ssh_private_key: ""
+
+# To add basic auth to registry: htpasswd -Bbn user password
+docker_registry_auth: ""
+# This is an example: for htpasswd -Bbn testuser testpassword
+# docker_registry_auth = "testuser:$2y$05$mrbehvPSMyaWioHhJJ6ksurodo9AmSqvrKG1YHCBTfG2EZlFy1qwi"
